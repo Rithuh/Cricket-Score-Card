@@ -1,0 +1,381 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="2.11">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="Rithuh"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2023-07-14 02:12:27 AM"/>
+        <attribute name="created" value="c2F0aGk7TEFQVE9QLVNDR01SMU85OzIwMjEtMDEtMDQ7MDc6MTg6NTIgUE07Mjg4OA=="/>
+        <attribute name="edited" value="c2F0aGk7TEFQVE9QLVNDR01SMU85OzIwMjMtMDctMTQ7MDI6MTI6MjcgQU07Mzg7MzAzOQ=="/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <comment text="This program can create, update, view and delete cricket score cards&#13;&#10;&#13;&#10;Author: Rithuh Subhakkrith S"/>
+            <declare name="n" type="Integer" array="False" size=""/>
+            <comment text="This Do while loop is used to check whether the number of scorecards are positive or not. Number of scorecards cannot be negative."/>
+            <do expression="n&lt;=0">
+                <output expression="&quot;Enter the total number of scorecards to be created : &quot;" newline="True"/>
+                <input variable="n"/>
+            </do>
+            <declare name="ch" type="String" array="False" size=""/>
+            <comment text="Array are passed by reference in flowgorithm. So, arrays are preferably used in this program."/>
+            <declare name="scorecardlist, competition, toss, tosswinner, venue, date" type="String" array="True" size="n"/>
+            <declare name="scorecard" type="String" array="False" size=""/>
+            <assign variable="scorecardlist[0]" expression="&quot;&quot;"/>
+            <declare name="choice, j, i, k, ov" type="Integer" array="False" size=""/>
+            <comment text="Since there are 11 batsmen and 11 bowlers in a team, the  size of batsmen and bowler related arrays are 11 times the size of the other arrays."/>
+            <declare name="batruns, batballs, bowruns, bowwickets" type="Integer" array="True" size="11*n"/>
+            <declare name="strikerate, bowovers, economy" type="Real" array="True" size="11*n"/>
+            <declare name="extras, wickets, runs, innings" type="Integer" array="True" size="n"/>
+            <declare name="batsman, bowler" type="String" array="True" size="11*n"/>
+            <comment text="Since there are two teams playing a match , the teams arraay is twice the size of scorecardlist array."/>
+            <declare name="teams" type="String" array="True" size="2*n"/>
+            <comment text="Variable i keeps the index of the last scorecard created."/>
+            <assign variable="i" expression="-1"/>
+            <assign variable="j" expression="0"/>
+            <do expression="choice != 3">
+                <comment text="This function displays the menu and gets the choice."/>
+                <assign variable="choice" expression="menu()"/>
+                <if expression="choice==1">
+                    <then>
+                        <comment text="If the number of scorecards created are equal to the total number of scorecards to be created, then the program must not allow any more scorecards to be created."/>
+                        <if expression="i==n-1">
+                            <then>
+                                <output expression="&quot;Reached the maximum limit of scorecards to be created!&quot;" newline="True"/>
+                            </then>
+                            <else>
+                                <comment text="i is incremented by one value, indicating that one more scorecard is created. "/>
+                                <assign variable="i" expression="i+1"/>
+                                <comment text="This function creates a new scorecard"/>
+                                <call expression="sccreate(i,scorecardlist, competition, toss, tosswinner, venue, date,batruns, batballs, bowruns, bowwickets,strikerate, bowovers, economy,extras, wickets, runs, innings,batsman,bowler,teams)"/>
+                            </else>
+                        </if>
+                    </then>
+                    <else>
+                        <if expression="choice==2">
+                            <then>
+                                <comment text="This function displays the list of scorecards available and gets the name of the scorecard to be searched."/>
+                                <assign variable="scorecard" expression="listsc(scorecardlist,i)"/>
+                                <comment text="This function displays the scorecard."/>
+                                <call expression="dispsc(i,scorecard,scorecardlist, competition, toss, tosswinner, venue, date,batruns, batballs, bowruns, bowwickets,strikerate, bowovers, economy,extras, wickets, runs, innings,batsman, bowler,teams)"/>
+                            </then>
+                            <else>
+                                <comment text="If choice is both not 1 and 2 , then obviously it must be 3. So,a Thank You message is displayed and the program ends."/>
+                                <output expression="&quot;Thank You!&quot;" newline="True"/>
+                            </else>
+                        </if>
+                    </else>
+                </if>
+            </do>
+        </body>
+    </function>
+    <function name="dispsc" type="None" variable="">
+        <parameters>
+            <parameter name="i" type="Integer" array="False"/>
+            <parameter name="scorecard" type="String" array="False"/>
+            <parameter name="scorecardlist" type="String" array="True"/>
+            <parameter name="competition" type="String" array="True"/>
+            <parameter name="toss" type="String" array="True"/>
+            <parameter name="tosswinner" type="String" array="True"/>
+            <parameter name="venue" type="String" array="True"/>
+            <parameter name="date" type="String" array="True"/>
+            <parameter name="batruns" type="Integer" array="True"/>
+            <parameter name="batballs" type="Integer" array="True"/>
+            <parameter name="bowruns" type="Integer" array="True"/>
+            <parameter name="bowwickets" type="Integer" array="True"/>
+            <parameter name="strikerate" type="Real" array="True"/>
+            <parameter name="bowovers" type="Real" array="True"/>
+            <parameter name="economy" type="Real" array="True"/>
+            <parameter name="extras" type="Integer" array="True"/>
+            <parameter name="wickets" type="Integer" array="True"/>
+            <parameter name="runs" type="Integer" array="True"/>
+            <parameter name="innings" type="Integer" array="True"/>
+            <parameter name="batsman" type="String" array="True"/>
+            <parameter name="bowler" type="String" array="True"/>
+            <parameter name="teams" type="String" array="True"/>
+        </parameters>
+        <body>
+            <comment text="This function displays the scorecard"/>
+            <declare name="j, k" type="Integer" array="False" size=""/>
+            <assign variable="k" expression="0"/>
+            <comment text="This for loop iterates from to  the number of scorecards created. "/>
+            <for variable="j" start="0" end="i" direction="inc" step="1">
+                <comment text="Each scorecard name is checked and if it is same as the scorecard that is to be found, then the True part is executed."/>
+                <if expression="scorecard == scorecardlist[j]">
+                    <then>
+                        <output expression="&quot;Competition : &quot;&amp;competition[j]&amp;&quot;&#13;&#10;Venue : &quot;&amp;venue[j]&amp;&quot;&#13;&#10;Match : &quot;&amp;teams[2*j]&amp;&quot; vs &quot;&amp;teams[2*j+1]&amp;&quot;&#13;&#10;Toss : &quot;&amp;toss[j]&amp;&quot;&#13;&#10;Toss Winner Team : &quot;&amp;tosswinner[j]&amp;&quot;&#13;&#10;Innings : &quot;&amp;innings[j]&amp;&quot;&#13;&#10;Date : &quot;&amp;date[j]" newline="True"/>
+                        <comment text="The scores of 11 batsmen need to be displayed. Since they are stored as 11 continuous elements, for loop is used. "/>
+                        <for variable="k" start="11*j" end="11*j+10" direction="inc" step="1">
+                            <output expression="&quot;Batsman : &quot;&amp;batsman[k]&amp;&quot; Runs scored : &quot;&amp;batruns[k]&amp;&quot; Balls faced : &quot;&amp;batballs[k]&amp;&quot; Strike Rate : &quot;&amp;strikerate[k]" newline="True"/>
+                        </for>
+                        <comment text="The scores of 11 bowlers need to be displayed. Since they are stored as 11 continuous elements, for loop is used. "/>
+                        <for variable="k" start="11*j" end="11*j+10" direction="inc" step="1">
+                            <output expression="&quot;Bowler : &quot;&amp;bowler[k]&amp;&quot; Overs bowled : &quot;&amp;bowovers[k]&amp;&quot; Wickets taken : &quot;&amp;bowwickets[k]&amp;&quot; Runs given: &quot;&amp;bowruns[k]&amp;&quot; Economy : &quot;&amp;economy[k]" newline="True"/>
+                        </for>
+                        <output expression="&quot;Total Score = &quot;&amp;runs[j]&amp;&quot; - &quot;&amp;wickets[j]" newline="True"/>
+                        <comment text="Now, after the for loop has been executed, value of k will be one more than the end value of for loop."/>
+                    </then>
+                    <else/>
+                </if>
+            </for>
+            <comment text="Value of k will not be 0 if the True part of the if statement is executed at least once, indicating that the scorecard is found and displayed. k has been declared at 0 at the start of the program and it is unchanged if the scorecard is not found."/>
+            <if expression="k==0">
+                <then>
+                    <output expression="&quot;Scorecard not found !&quot;" newline="True"/>
+                </then>
+                <else/>
+            </if>
+        </body>
+    </function>
+    <function name="exechoice" type="String" variable="ch">
+        <parameters/>
+        <body>
+            <comment text="This function gets the choice to edit the scorecard or save the scorecard and continue with the program."/>
+            <declare name="ch" type="String" array="False" size=""/>
+            <output expression="&quot;Enter :&#13;&#10;e to edit&#13;&#10;c to continue(Or press any other key to continue) &#13;&#10;Enter your choice : &quot;" newline="True"/>
+            <input variable="ch"/>
+            <comment text="choice got from the user is returned."/>
+        </body>
+    </function>
+    <function name="listsc" type="String" variable="scorecard">
+        <parameters>
+            <parameter name="scorecardlist" type="String" array="True"/>
+            <parameter name="i" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <comment text="This function lists all the scorecard name and gets input for the scorecard to be displayed."/>
+            <declare name="scorecard" type="String" array="False" size=""/>
+            <declare name="j" type="Integer" array="False" size=""/>
+            <output expression="&quot;List of scorecards : &quot;" newline="True"/>
+            <for variable="j" start="0" end="i" direction="inc" step="1">
+                <output expression="j+1&amp;&quot; . &quot;&amp;scorecardlist[j]" newline="True"/>
+            </for>
+            <assign variable="scorecard" expression="&quot;&quot;"/>
+            <output expression="&quot;Enter the name of the scorecard : &quot;" newline="True"/>
+            <input variable="scorecard"/>
+            <comment text="The name of the scorecard to be displayed is returned."/>
+        </body>
+    </function>
+    <function name="menu" type="Integer" variable="choice">
+        <parameters/>
+        <body>
+            <comment text="This function displays the menu and asks for the choice"/>
+            <declare name="choice" type="Integer" array="False" size=""/>
+            <output expression="&quot;WELCOME!&#13;&#10;MENU&#13;&#10;Enter:&#13;&#10;1. New Score Sheet&#13;&#10;2. View Score Sheet&#13;&#10;3. Exit&#13;&#10;Enter your choice : &quot;" newline="True"/>
+            <comment text="This Do while loop checks whether the input number is 1 or 2 or 3. If it is not any of the above, then the input is got again from the user.&#13;&#10;"/>
+            <do expression="choice!=1&amp;&amp;choice!=2&amp;&amp;choice!=3">
+                <input variable="choice"/>
+                <if expression="choice!=1&amp;&amp;choice!=2&amp;&amp;choice!=3">
+                    <then>
+                        <output expression="&quot;Please enter the correct choice number(1/2/3)&#13;&#10;&quot;" newline="True"/>
+                    </then>
+                    <else/>
+                </if>
+            </do>
+            <comment text="This function returns the choice that has been got as input."/>
+        </body>
+    </function>
+    <function name="sccreate" type="None" variable="">
+        <parameters>
+            <parameter name="i" type="Integer" array="False"/>
+            <parameter name="scorecardlist" type="String" array="True"/>
+            <parameter name="competition" type="String" array="True"/>
+            <parameter name="toss" type="String" array="True"/>
+            <parameter name="tosswinner" type="String" array="True"/>
+            <parameter name="venue" type="String" array="True"/>
+            <parameter name="date" type="String" array="True"/>
+            <parameter name="batruns" type="Integer" array="True"/>
+            <parameter name="batballs" type="Integer" array="True"/>
+            <parameter name="bowruns" type="Integer" array="True"/>
+            <parameter name="bowwickets" type="Integer" array="True"/>
+            <parameter name="strikerate" type="Real" array="True"/>
+            <parameter name="bowovers" type="Real" array="True"/>
+            <parameter name="economy" type="Real" array="True"/>
+            <parameter name="extras" type="Integer" array="True"/>
+            <parameter name="wickets" type="Integer" array="True"/>
+            <parameter name="runs" type="Integer" array="True"/>
+            <parameter name="innings" type="Integer" array="True"/>
+            <parameter name="batsman" type="String" array="True"/>
+            <parameter name="bowler" type="String" array="True"/>
+            <parameter name="teams" type="String" array="True"/>
+        </parameters>
+        <body>
+            <comment text="This function creates a new scorecard"/>
+            <declare name="k, ov, wickchk" type="Integer" array="False" size=""/>
+            <declare name="scorecard" type="String" array="False" size=""/>
+            <declare name="ch" type="String" array="False" size=""/>
+            <assign variable="wickchk" expression="0"/>
+            <comment text="Do while loop is used here to give an option for the user to edit the scorecard"/>
+            <do expression="ch==&quot;e&quot;">
+                <output expression="&quot;Enter the name of the scorecard : &quot;" newline="True"/>
+                <input variable="scorecard"/>
+                <assign variable="scorecardlist[i]" expression="scorecard"/>
+                <output expression="&quot;Enter the competition name: &quot;" newline="True"/>
+                <input variable="competition[i]"/>
+                <output expression="&quot;Enter the venue&quot;" newline="True"/>
+                <input variable="venue[i]"/>
+                <comment text="Since two teams are playing, teams array needs to store the names of two teams continuously, which means that each scorecard will have two teams "/>
+                <output expression="&quot;Enter the playing teams.&#13;&#10;Team 1 : &quot;" newline="True"/>
+                <input variable="teams[2*i]"/>
+                <output expression="&quot;Team 2 : &quot;" newline="True"/>
+                <input variable="teams[2*i+1]"/>
+                <output expression="&quot;Enter the toss winner team : &quot;" newline="True"/>
+                <input variable="tosswinner[i]"/>
+                <output expression="&quot;Enter the outcome of the toss : &quot;" newline="True"/>
+                <input variable="toss[i]"/>
+                <comment text="This Do while loop checks whether innings is positive or not. Innings cannot be negative."/>
+                <do expression="innings[i]&lt;0">
+                    <output expression="&quot;Enter the innings&quot;" newline="True"/>
+                    <input variable="innings[i]"/>
+                    <if expression="innings[i]&lt;0">
+                        <then>
+                            <output expression="&quot;Innings cannot be negative. Re enter the innings.&quot;" newline="True"/>
+                        </then>
+                        <else/>
+                    </if>
+                </do>
+                <output expression="&quot;Enter the date : &quot;" newline="True"/>
+                <input variable="date[i]"/>
+                <assign variable="runs[i]" expression="0"/>
+                <comment text="For loop is used here to enter the details of 11 batsmen continuously"/>
+                <for variable="k" start="11*i" end="(11*i)+10" direction="inc" step="1">
+                    <output expression="&quot;Enter the name of the batsman : &quot;" newline="True"/>
+                    <input variable="batsman[k]"/>
+                    <comment text="Do while loop is used here to check whether the runs scored is positive. Runs cannot be negative."/>
+                    <do expression="batruns[k]&lt;0">
+                        <output expression="&quot;Enter the number of runs scored : &quot;" newline="True"/>
+                        <input variable="batruns[k]"/>
+                        <if expression="batruns[k]&lt;0">
+                            <then>
+                                <output expression="&quot;Runs cannot be negative. Re enter the runs scored.&quot;" newline="True"/>
+                            </then>
+                            <else/>
+                        </if>
+                    </do>
+                    <comment text="runs is the array storing the total number of runs scored by a team. So here, runs increment itself with the runs scored by each batsman."/>
+                    <assign variable="runs[i]" expression="runs[i]+batruns[k]"/>
+                    <comment text="Do while loop is used to check whether the number of balls faced is positive or  not. Number of balls faced cannot be negative."/>
+                    <do expression="batballs[k]&lt;0">
+                        <output expression="&quot;Enter the number of balls faced : &quot;" newline="True"/>
+                        <input variable="batballs[k]"/>
+                        <if expression="batballs[k]&lt;0">
+                            <then>
+                                <output expression="&quot;Number of balls faced cannot be negative. Re enter the number of balls faced.&quot;" newline="True"/>
+                            </then>
+                            <else/>
+                        </if>
+                    </do>
+                    <comment text="Here, strike rate of each batsman is calculated. Strike rate is 0 if the batsman has faced no balls."/>
+                    <if expression="batballs[k]==0">
+                        <then>
+                            <assign variable="strikerate[k]" expression="0"/>
+                        </then>
+                        <else>
+                            <assign variable="strikerate[k]" expression="(batruns[k]/batballs[k])*100"/>
+                        </else>
+                    </if>
+                </for>
+                <comment text="The total number of wickets taken by all bowlers must be less than or equal to 10. If the number crosses 10, then there is an error in the entering of details. This Do while loop checks this."/>
+                <do expression="wickchk&gt;10">
+                    <comment text="For loop is used here to enter the details of 11 bowlers continuously."/>
+                    <for variable="k" start="11*i" end="(11*i)+10" direction="inc" step="1">
+                        <output expression="&quot;Enter the name of the bowler : &quot;" newline="True"/>
+                        <input variable="bowler[k]"/>
+                        <comment text="Do while loop is used here to check whether the number of overs bowled is in the proper format or not. 1 over = 6 balls. So, the maximum number allowed after the decimal point is 5. Eg. overs can be 1, 1.1,1.2,1.3,1.4,1.5&#13;&#10;&#13;&#10;1.6 becomes 2 overs. And then the cycle continues."/>
+                        <do expression="bowovers[k]%1&gt;0.5">
+                            <comment text="Do while loop is used to ceheck whether the number of overs bowled is positive or not. Overs cannot be negative."/>
+                            <do expression="bowovers[k]&lt;0">
+                                <output expression="&quot;Enter the number of overs bowled by the bowler : &quot;" newline="True"/>
+                                <input variable="bowovers[k]"/>
+                                <if expression="bowovers[k]&lt;0">
+                                    <then>
+                                        <output expression="&quot;Overs can't be negative. Re enter the number of overs bowled.&quot;" newline="True"/>
+                                    </then>
+                                    <else/>
+                                </if>
+                            </do>
+                            <if expression="bowovers[k]%1&gt;0.5">
+                                <then>
+                                    <output expression="&quot;Invalid over number.Re enter the correct over number&quot;" newline="True"/>
+                                </then>
+                                <else/>
+                            </if>
+                        </do>
+                        <comment text="The maximum number of wickets that can be taken by a bowler is 10. This do while loop is used to check whetehr the wickets taken is greater than 10 or not. Also wickets cannot be negative."/>
+                        <do expression="bowwickets[k]&gt;10">
+                            <output expression="&quot;Enter the number of wickets taken by the bowler : &quot;" newline="True"/>
+                            <input variable="bowwickets[k]"/>
+                            <if expression="bowwickets[k]&gt;10">
+                                <then>
+                                    <output expression="&quot;Inavalid number of wickets. Re enter the correct number of wickets&quot;" newline="True"/>
+                                </then>
+                                <else/>
+                            </if>
+                        </do>
+                        <comment text="wickch is a variable that keeps count of the total number of wickets taken by all bowlers."/>
+                        <assign variable="wickchk" expression="wickchk+bowwickets[k]"/>
+                        <comment text="This Do while loop checks whether the runs given is positive or not. Runs given cannot be negative."/>
+                        <do expression="bowruns[k]&lt;0">
+                            <output expression="&quot;Enter the number of runs given by the bowler : &quot;" newline="True"/>
+                            <input variable="bowruns[k]"/>
+                            <if expression="bowruns[k]&lt;0">
+                                <then>
+                                    <output expression="&quot;Runs given cannot be negative. Re enter the number of runs given.&quot;" newline="True"/>
+                                </then>
+                                <else/>
+                            </if>
+                        </do>
+                        <assign variable="ov" expression="bowovers[k]"/>
+                        <comment text="Econonmy of a bowler is 0 if the bowler didnot bowl a ball."/>
+                        <if expression="bowovers[k]==0">
+                            <then>
+                                <assign variable="economy[k]" expression="0"/>
+                            </then>
+                            <else>
+                                <assign variable="economy[k]" expression="bowruns[k]/(ov+((bowovers[k]-ov)*10/6))"/>
+                            </else>
+                        </if>
+                    </for>
+                    <if expression="wickchk&gt;10">
+                        <then>
+                            <output expression="&quot;The total wickets taken crosses 10.Re enter the bowler details from first.&quot;" newline="True"/>
+                        </then>
+                        <else/>
+                    </if>
+                </do>
+                <comment text="This Do while loop checks whether the extras are positive or not. Extras cannot be negative."/>
+                <do expression="extras[i]&lt;0">
+                    <output expression="&quot;Enter the runs scored by extras : &quot;" newline="True"/>
+                    <input variable="extras[i]"/>
+                    <if expression="extras[i]&lt;0">
+                        <then>
+                            <output expression="&quot;Extras cannot be negative. Re enter the extras. &quot;" newline="True"/>
+                        </then>
+                        <else/>
+                    </if>
+                </do>
+                <assign variable="runs[i]" expression="runs[i]+extras[i]"/>
+                <comment text="Wickets fallen cannot be lesser than the total number of wickets taken by all bowlers. Also, wickets fallen cannot be negative. This Do while loop checks both the conditions."/>
+                <do expression="wickets[i]&gt;10||wickchk&gt;wickets[i]">
+                    <output expression="&quot;Enter the number of wickets fallen : &quot;" newline="True"/>
+                    <input variable="wickets[i]"/>
+                    <if expression="wickets[i]&gt;10">
+                        <then>
+                            <output expression="&quot;Invalid number of wickets. Re enter the correct number of wickets&quot;" newline="True"/>
+                        </then>
+                        <else/>
+                    </if>
+                    <if expression="wickchk&gt;wickets[i]">
+                        <then>
+                            <output expression="&quot;The wickets taken by bowlers are greater than the total wickets fallen. Re enter the number of wickets fallen.&quot;" newline="True"/>
+                        </then>
+                        <else/>
+                    </if>
+                </do>
+                <comment text="This function gets the choice to edit or confirm the scorecard and continue with the program."/>
+                <assign variable="ch" expression="exechoice()"/>
+            </do>
+        </body>
+    </function>
+</flowgorithm>
